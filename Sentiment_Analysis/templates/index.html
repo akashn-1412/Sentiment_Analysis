@@ -1,0 +1,154 @@
+{% extends "bootstrap/base.html" %}
+
+{% block content %}
+
+<style type="text/css">
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .jumbotron {
+        background-color: #007BFF;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .form-control {
+        resize: none;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-outline-dark {
+        border-color: #343a40;
+    }
+
+    .btn-outline-dark:hover {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-primary {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+    }
+
+    .list-group-item {
+        border: none;
+    }
+
+    .table {
+        background-color: #343a40;
+        color: white;
+    }
+</style>
+
+<div class="container">
+    <div class="jumbotron">
+        <h3><b>SENTIMENT ANALYSIS USING NLP</b></h3>
+        <p>Text Summarization Tool</p>
+    </div>
+</div>
+
+<div class="container">
+    <form method="POST" action="{{ url_for('analyse') }}" id="myForm">
+        <label><strong>Enter Your Text Below</strong></label><br>
+        <textarea class="form-control" rows="8" name="rawtext"></textarea><br>
+
+        <input type="submit" onclick="myAnalyser()" value="Submit" class="btn btn-primary">
+        <input type="button" onclick="myFunction()" value="Clear" class="btn btn-outline-dark">
+
+        <a href="{{ url_for('index') }}" type="button" class="btn btn-danger">Reset</a>
+    </form>
+</div>
+<br/>
+<hr/>
+<div class="main">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Main Points
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    <div class="alert alert-primary" role="alert">
+                        This text has {{ number_of_tokens }} tokens with {{ len_of_words }} important points
+                    </div>
+                </h5>
+                <div class="card-text">
+                    <h5>Your Text</h5>
+                    <p style="color:#007BFF; font-family:sans-serif;">{{ received_text }}</p>
+                    <hr/>
+                    <br/>
+                    <p>Time Elapsed: <span style="color:#007BFF;">{{ final_time }}</span> seconds to analyze</p>
+                    <p>This text is about:</p>
+                    {% for i in summary %}
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-info"><span style="color:black">{{ i }}</span>
+                            <a href="http://www.dictionary.com/browse/{{ i }}?s=" target="_blank"
+                            type="button" class="btn btn-outline-primary btn-sm"
+                            style="float:right; font-size:9px; background-color: #007BFF; color: white;">View</a>
+
+                        </li>
+                    </ul>
+                    {% endfor %}
+                </div>
+                <div class="card-footer text-muted">
+                    <table class="table table-striped table-dark">
+                        <thead>
+                        <tr>
+                            <th scope="col">Sentiment</th>
+                            <th scope="col">Polarity</th>
+                            <th scope="col">Subjectivity</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">Score:</th>
+                            <td>{{ blob_sentiment }}</td>
+                            <td>{{ blob_subjectivity }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
